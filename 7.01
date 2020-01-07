@@ -1,0 +1,154 @@
+import pygame
+pygame.init()
+width = 406
+height = 600
+win = pygame.display.set_mode((width,height))
+
+pygame.display.set_caption("Client")
+
+clientNumber = 0
+
+white = (255, 255, 255) 
+green = (100, 100, 100) 
+blue = (0, 0, 128) 
+red = (255, 0, 0)
+empty_color = (0, 0, 0)
+
+class Text():
+    def __init__(self, text, fontSize, fontColor, x, y):
+        self.text = text
+        self.x = x
+        self.y = y
+        self.fontColor = fontColor
+        self.font = pygame.font.Font(None, fontSize)
+
+    def draw(self, win):
+        textRender = self.font.render(self.text,True,self.fontColor,None)
+        textRect = textRender.get_rect()
+        textRect.center = (self.x, self.y)
+        win.blit(textRender, textRect)
+
+
+
+class Board():
+    def __init__(self, state, color):
+        self.state = state
+        self.color = color
+        self.centers = [[101, 257], [203, 257], [305, 257], [101, 360], [203, 360], [305, 360], [101, 463], [203, 463], [305, 463]]
+        self.rect = (52, 202, 302, 302)
+        self.x = [[52,150],[154,252],[256,354]]
+        self.y = [[202,300],[304,402],[406,504]]
+
+
+    def draw(self, win):
+        pygame.draw.rect(win, self.color, self.rect)
+        pygame.draw.rect(win, (0,0,0), (150,202,4,302))
+        pygame.draw.rect(win, (0,0,0), (252,202,4,302))
+        pygame.draw.rect(win, (0,0,0), (52,300,302,4))
+        pygame.draw.rect(win, (0,0,0), (52,402,302,4))
+        pygame.draw.rect(win, (0,0,0), (48,198,310,4))
+        pygame.draw.rect(win, (0,0,0), (48,504,310,4))
+        pygame.draw.rect(win, (0,0,0), (48,198,4,310))
+        pygame.draw.rect(win, (0,0,0), (354,198,4,310))
+
+    def draw_state(self, win):
+        for i in range(0,9):
+            if self.state[i] == 1:
+                sign = Text("X", 140, red, self.centers[i][0], self.centers[i][1])
+            elif self.state[i] == 2:
+                sign = Text("O", 140, red, self.centers[i][0], self.centers[i][1])
+            else:
+                sign = Text("", 140, red, self.centers[i][0], self.centers[i][1])
+            sign.draw(win)
+
+
+
+    #def move(self):
+    #    keys = pygame.key.get_pressed()
+
+    #    if keys[pygame.K_LEFT]:
+    #        self.x -= self.vel
+
+    #    if keys[pygame.K_RIGHT]:
+    #        self.x += self.vel
+
+    #    if keys[pygame.K_UP]:
+    #        self.y -= self.vel
+
+    #    if keys[pygame.K_DOWN]:
+    #        self.y += self.vel
+
+    #    self.rect = (self.x, self.y, self.width, self.height)
+
+def position():
+    if pygame.mouse.get_pressed()[0]:
+        position = pygame.mouse.get_pos()
+        if(position[0] >= 52 and position[0]<=150 and position[1] >= 202 and position[1] <= 300):
+           print("0" )
+           return 0
+        elif(position[0] >= 154 and position[0]<=252 and position[1] >= 202 and position[1] <= 300):
+             print("1" )
+             return 1
+        elif(position[0] >= 256 and position[0]<=354 and position[1] >= 202 and position[1] <= 300):
+             print("2" )
+             return 2
+        elif(position[0] >= 52 and position[0]<=150 and position[1] >= 304 and position[1] <= 402):
+             print("3" )
+             return 3
+        elif(position[0] >= 154 and position[0]<=252 and position[1] >= 304 and position[1] <= 402):
+             print("4" )
+             return 4
+        elif(position[0] >= 256 and position[0]<=354 and position[1] >= 304 and position[1] <= 402):
+             print("5" )
+             return 5
+        elif(position[0] >= 52 and position[0]<=150 and position[1] >= 406 and position[1] <= 504):
+             print("6" )
+             return 6
+        elif(position[0] >= 154 and position[0]<=252 and position[1] >= 406 and position[1] <= 504):
+             print("7" )
+             return 7
+        elif(position[0] >= 256 and position[0]<=354 and position[1] >= 406 and position[1] <= 504):
+             print("8" )
+             return 8
+        else:
+            print("cycki")
+            return 99
+
+
+def redrawWindow(win, board, textOne):
+    win.fill(white)
+    board.draw(win)
+    board.draw_state(win)
+    textOne.draw(win)
+
+    pygame.display.update()
+
+#def play(board):
+#    board.state = state
+
+
+def main():
+    run = True
+    b = Board([0,1,0,0,2,0,0,0,0], green)
+    t = Text("XDDDD", 20, red, 100, 100)
+
+
+    clock = pygame.time.Clock()
+
+    while run:
+        clock.tick(60)
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                position()
+
+            if event.type == pygame.QUIT:
+                run = False
+                pygame.quit()
+
+        #p.move()
+        #play(b)    
+        redrawWindow(win, b, t)
+
+main()
+
+
